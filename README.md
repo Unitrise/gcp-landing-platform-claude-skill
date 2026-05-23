@@ -15,84 +15,77 @@ When triggered, this skill guides Claude Code to:
 
 There are three ways to install this skill, in order of convenience.
 
-### Option 1: One-liner from GitHub (recommended, after first-time setup)
+### Option 1: One-liner from GitHub (recommended)
 
-Once you've pushed this skill to your own GitHub repo (see *First-time GitHub setup* below), install it from any project with a single command:
+Install from any project with a single command:
 
 ```bash
 # User-wide install (available in every project)
-curl -fsSL https://raw.githubusercontent.com/<YOU>/<REPO>/main/gcp-landing-platform/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Unitrise/gcp-landing-platform-claude-skill/master/install.sh | bash
 
 # Project-only install (current directory)
-curl -fsSL https://raw.githubusercontent.com/<YOU>/<REPO>/main/gcp-landing-platform/install.sh | bash -s -- --project
+curl -fsSL https://raw.githubusercontent.com/Unitrise/gcp-landing-platform-claude-skill/master/install.sh | bash -s -- --project
 ```
 
 To make this even easier, add a shell alias to your `~/.zshrc` or `~/.bashrc`:
 
 ```bash
-alias install-landing-skill='curl -fsSL https://raw.githubusercontent.com/<YOU>/<REPO>/main/gcp-landing-platform/install.sh | bash'
+alias install-landing-skill='curl -fsSL https://raw.githubusercontent.com/Unitrise/gcp-landing-platform-claude-skill/master/install.sh | bash'
 ```
 
 Then from any project: `install-landing-skill` or `install-landing-skill --project`.
 
-### Option 2: From an unzipped copy
+#### Windows users
 
-If you've downloaded the `.zip` package:
+PowerShell's `curl` is an alias for `Invoke-WebRequest` and won't accept `-fsSL`. Use `curl.exe` (the real curl, shipped with Windows 10/11) and `bash` from Git for Windows or WSL:
 
-```bash
-unzip gcp-landing-platform.zip
-bash gcp-landing-platform/install.sh              # user-wide
-bash gcp-landing-platform/install.sh --project    # project-only
+```powershell
+curl.exe -fsSL https://raw.githubusercontent.com/Unitrise/gcp-landing-platform-claude-skill/master/install.sh | bash
 ```
 
-The script handles both scopes and won't double-install — re-running updates the skill in place.
+Or skip bash entirely and copy the files with PowerShell:
+
+```powershell
+$dest = "$env:USERPROFILE\.claude\skills\gcp-landing-platform"
+if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
+git clone https://github.com/Unitrise/gcp-landing-platform-claude-skill.git $dest
+```
+
+### Option 2: From a local clone or unzipped copy
+
+If you've cloned the repo (folder is named `gcp-landing-platform-claude-skill`) or unzipped the GitHub `.zip` (folder is named `gcp-landing-platform-claude-skill-master`):
+
+```bash
+bash <repo-folder>/install.sh              # user-wide
+bash <repo-folder>/install.sh --project    # project-only
+```
+
+The script handles both scopes and won't double-install — re-running updates the skill in place. It always installs into a folder named `gcp-landing-platform` regardless of what the source folder is called.
 
 ### Option 3: Manual copy
 
-If you prefer to skip the installer:
+If you prefer to skip the installer, copy the cloned/unzipped repo contents into a folder named `gcp-landing-platform`:
 
 ```bash
 # User-wide
-cp -r gcp-landing-platform ~/.claude/skills/
+cp -r <repo-folder> ~/.claude/skills/gcp-landing-platform
 
 # Project-only
-mkdir -p .claude/skills && cp -r gcp-landing-platform .claude/skills/
+mkdir -p .claude/skills && cp -r <repo-folder> .claude/skills/gcp-landing-platform
 ```
 
 Either way, restart Claude Code (or open a fresh session) so the skill is picked up.
 
-## First-time GitHub setup (for the one-liner)
+## Forking the skill (optional)
 
-The one-liner needs the skill hosted somewhere Claude Code can `curl` from. The simplest path: a public GitHub repo.
+If you fork this repo and want the one-liner to install your version, set the env vars on the curl invocation:
 
-1. **Create a repo on GitHub** — e.g. `<your-username>/claude-skills`. It can be public, or private if you're comfortable using GitHub PATs.
+```bash
+SKILL_REPO_OWNER=<you> SKILL_REPO_NAME=<your-repo> SKILL_REPO_BRANCH=main \
+  curl -fsSL https://raw.githubusercontent.com/<you>/<your-repo>/main/install.sh | bash
+```
 
-2. **Push the skill folder:**
-
-   ```bash
-   git clone https://github.com/<you>/claude-skills.git
-   cd claude-skills
-   cp -r /path/to/gcp-landing-platform .
-   git add gcp-landing-platform
-   git commit -m "Add gcp-landing-platform skill"
-   git push
-   ```
-
-3. **Edit `install.sh`** so the one-liner can find the repo. Open `gcp-landing-platform/install.sh` and set:
-
-   ```bash
-   REPO_OWNER="${SKILL_REPO_OWNER:-<your-username>}"
-   REPO_NAME="${SKILL_REPO_NAME:-claude-skills}"
-   ```
-
-   Or skip editing and pass them as env vars on the curl invocation:
-
-   ```bash
-   SKILL_REPO_OWNER=<you> SKILL_REPO_NAME=claude-skills \
-     curl -fsSL https://raw.githubusercontent.com/<you>/claude-skills/main/gcp-landing-platform/install.sh | bash
-   ```
-
-4. Commit and push the edit. The one-liner now works from any machine.
+Or edit the defaults at the top of `install.sh` so the bare one-liner targets your fork without env vars.
 
 ## Scope: user-wide vs project
 

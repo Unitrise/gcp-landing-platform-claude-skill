@@ -7,13 +7,13 @@
 #        bash gcp-landing-platform/install.sh              # global (default)
 #        bash gcp-landing-platform/install.sh --project    # current project only
 #
-#   2. Piped from GitHub (after you've pushed this skill to your own repo):
-#        curl -fsSL https://raw.githubusercontent.com/<USER>/<REPO>/main/gcp-landing-platform/install.sh | bash
-#        curl -fsSL https://raw.githubusercontent.com/<USER>/<REPO>/main/gcp-landing-platform/install.sh | bash -s -- --project
+#   2. Piped from GitHub:
+#        curl -fsSL https://raw.githubusercontent.com/Unitrise/gcp-landing-platform-claude-skill/master/install.sh | bash
+#        curl -fsSL https://raw.githubusercontent.com/Unitrise/gcp-landing-platform-claude-skill/master/install.sh | bash -s -- --project
 #
-#   3. With env-var overrides (lets you keep one install.sh and target many forks):
-#        SKILL_REPO_OWNER=talhaviv SKILL_REPO_NAME=claude-skills \
-#          curl -fsSL https://raw.githubusercontent.com/talhaviv/claude-skills/main/gcp-landing-platform/install.sh | bash
+#   3. With env-var overrides (target a fork or branch without editing this file):
+#        SKILL_REPO_OWNER=<you> SKILL_REPO_NAME=<your-repo> SKILL_REPO_BRANCH=main \
+#          curl -fsSL https://raw.githubusercontent.com/<you>/<your-repo>/main/install.sh | bash
 #
 # Flags:
 #   --project, -p   Install to ./.claude/skills/ (current directory; only available in this project)
@@ -23,14 +23,15 @@
 set -euo pipefail
 
 # -----------------------------------------------------------------------------
-# Configuration — edit these once after you fork the skill to your own GitHub
-# (Or pass them as environment variables when running the curl one-liner.)
+# Configuration — defaults point at the canonical Unitrise repo.
+# Override any of these via SKILL_REPO_OWNER / SKILL_REPO_NAME / SKILL_REPO_BRANCH
+# environment variables to install from a fork or branch.
 # -----------------------------------------------------------------------------
 
 SKILL_NAME="gcp-landing-platform"
-REPO_OWNER="${SKILL_REPO_OWNER:-CHANGE_ME}"   # e.g. talhaviv
-REPO_NAME="${SKILL_REPO_NAME:-CHANGE_ME}"     # e.g. claude-skills
-REPO_BRANCH="${SKILL_REPO_BRANCH:-main}"
+REPO_OWNER="${SKILL_REPO_OWNER:-Unitrise}"
+REPO_NAME="${SKILL_REPO_NAME:-gcp-landing-platform-claude-skill}"
+REPO_BRANCH="${SKILL_REPO_BRANCH:-master}"
 
 # -----------------------------------------------------------------------------
 # Argument parsing

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"c:/Claude-Skills/gcp-landing-platform\" remote -v)",
+      "Bash(git -C \"c:/Claude-Skills/gcp-landing-platform\" branch --show-current)"
+    ]
+  }
+}
